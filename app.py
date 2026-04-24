@@ -2,8 +2,9 @@ import streamlit as st
 from groq import Groq
 import os
 
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-client = Groq(api_key=GROQ_API_KEY)
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+response = client.chat.completions.create(
+    model="meta-llama/llama-4-scout-17b-16e-instruct",
 
 st.set_page_config(page_title="Fair Study AI")
 st.title("Fair Study AI")
@@ -23,7 +24,7 @@ if feature == "Concept Explainer":
         if topic:
             with st.spinner("Thinking..."):
                 response = client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="meta-llama/llama-4-scout-17b-16e-instruct",
                     messages=[{"role": "user", "content": f"Explain '{topic}' for a {level} college student clearly."}]
                 )
                 st.write(response.choices[0].message.content)
@@ -35,7 +36,7 @@ elif feature == "Smart Note Generator":
         if subject:
             with st.spinner("Generating..."):
                 response = client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="meta-llama/llama-4-scout-17b-16e-instruct",
                     messages=[{"role": "user", "content": f"Generate structured study notes for '{subject}' for college students."}]
                 )
                 st.write(response.choices[0].message.content)
@@ -47,7 +48,7 @@ elif feature == "Doubt Solver":
         if doubt:
             with st.spinner("Solving..."):
                 response = client.chat.completions.create(
-                    model="llama-3.1-8b-instant",
+                    model="meta-llama/llama-4scout-17b-16e-instruct",
                     messages=[{"role": "user", "content": f"Answer this college student doubt clearly: {doubt}"}]
                 )
                 st.write(response.choices[0].message.content)
