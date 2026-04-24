@@ -3,7 +3,7 @@ from groq import Groq
 import os
 
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "xai-yKNdDwUoxIsGDRbPKfyjCQLa72gLgjPRz8sw2MddQVzWvU1fB40lxu7DaunQZK2jawvU3VFURKA4KZDD")
+client = Groq(api_key=GROQ_API_KEY)
 
 st.set_page_config(page_title="Fair Study AI")
 st.title("Fair Study AI")
