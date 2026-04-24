@@ -3,8 +3,6 @@ from groq import Groq
 import os
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-response = client.chat.completions.create(
-    model="meta-llama/llama-4-scout-17b-16e-instruct",
 
 st.set_page_config(page_title="Fair Study AI")
 st.title("Fair Study AI")
@@ -48,7 +46,7 @@ elif feature == "Doubt Solver":
         if doubt:
             with st.spinner("Solving..."):
                 response = client.chat.completions.create(
-                    model="meta-llama/llama-4scout-17b-16e-instruct",
+                    model="meta-llama/llama-4-scout-17b-16e-instruct",
                     messages=[{"role": "user", "content": f"Answer this college student doubt clearly: {doubt}"}]
                 )
                 st.write(response.choices[0].message.content)
