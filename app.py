@@ -47,7 +47,7 @@ elif feature == "Doubt Solver":
         if doubt:
             with st.spinner("Solving..."):
                 response = client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="llama-3.3-70b-versatile",
                     messages=[{"role": "user", "content": f"Answer this college student doubt clearly: {doubt}"}]
                 )
                 st.write(response.choices[0].message.content)
