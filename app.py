@@ -4,7 +4,7 @@ import os
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-st.set_page_config(page_title="Fair Study AI")
+st.set_page_config(page_title="Fair Study AI", layout="wide")
 st.title("Fair Study AI")
 st.caption("Your unbiased AI-powered learning assistant")
 
@@ -12,7 +12,22 @@ feature = st.sidebar.selectbox("Choose a Feature", [
     "Concept Explainer",
     "Smart Note Generator",
     "Doubt Solver",
+    "Quiz Generator",
+    "Text Summarizer",
 ])
+
+language = st.sidebar.selectbox("Response Language", [
+    "English",
+    "Tamil",
+    "Hindi",
+])
+
+def get_response(prompt):
+    response = client.chat.completions.create(
+        model="meta-llama/llama-4-scout-17b-16e-instruct",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
 
 if feature == "Concept Explainer":
     st.header("Concept Explainer")
@@ -21,11 +36,8 @@ if feature == "Concept Explainer":
     if st.button("Explain!"):
         if topic:
             with st.spinner("Thinking..."):
-                response = client.chat.completions.create(
-                    model="meta-llama/llama-4-scout-17b-16e-instruct",
-                    messages=[{"role": "user", "content": f"Explain '{topic}' for a {level} college student clearly."}]
-                )
-                st.write(response.choices[0].message.content)
+                prompt = f"Explain '{topic}' for a {level} college student clearly. Respond in {language}."
+                st.write(get_response(prompt))
 
 elif feature == "Smart Note Generator":
     st.header("Smart Note Generator")
@@ -33,11 +45,8 @@ elif feature == "Smart Note Generator":
     if st.button("Generate Notes!"):
         if subject:
             with st.spinner("Generating..."):
-                response = client.chat.completions.create(
-                    model="meta-llama/llama-4-scout-17b-16e-instruct",
-                    messages=[{"role": "user", "content": f"Generate structured study notes for '{subject}' for college students."}]
-                )
-                st.write(response.choices[0].message.content)
+                prompt = f"Generate structured study notes for '{subject}' for college students. Respond in {language}."
+                st.write(get_response(prompt))
 
 elif feature == "Doubt Solver":
     st.header("Doubt Solver")
@@ -45,8 +54,24 @@ elif feature == "Doubt Solver":
     if st.button("Solve!"):
         if doubt:
             with st.spinner("Solving..."):
-                response = client.chat.completions.create(
-                    model="meta-llama/llama-4-scout-17b-16e-instruct",
-                    messages=[{"role": "user", "content": f"Answer this college student doubt clearly: {doubt}"}]
-                )
-                st.write(response.choices[0].message.content)
+                prompt = f"Answer this college student doubt clearly: {doubt}. Respond in {language}."
+                st.write(get_response(prompt))
+
+elif feature == "Quiz Generator":
+    st.header("Quiz Generator")
+    topic = st.text_input("Enter topic for quiz:")
+    num = st.slider("Number of questions:", 3, 10, 5)
+    if st.button("Generate Quiz!"):
+        if topic:
+            with st.spinner("Generating quiz..."):
+                prompt = f"Generate {num} MCQ questions with 4 options and answers for '{topic}'. Respond in {language}."
+                st.write(get_response(prompt))
+
+elif feature == "Text Summarizer":
+    st.header("Text Summarizer")
+    text = st.text_area("Paste your text here:", height=200)
+    if st.button("Summarize!"):
+        if text:
+            with st.spinner("Summarizing..."):
+                prompt = f"Summarize this text clearly and concisely for a college student: {text}. Respond in {language}."
+                st.write(get_response(prompt))
