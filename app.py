@@ -1,11 +1,9 @@
 import streamlit as st
-import google.generativeai as genai
 import os
 import time
 
-# Gemini API setup
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-2.0-flash-lite")
+from groq import groq
+client = Groq(api_key=os.environ.get("GROQ_API_KEY")
 
 # Rate limiting + Caching
 if 'last_request' not in st.session_state:
@@ -13,8 +11,11 @@ if 'last_request' not in st.session_state:
 
 @st.cache_data
 def get_cached_response(prompt):
-    response = model.generate_content(prompt)
-    return response.text
+    response = client.chat.completions.create(
+        model="meta-llama-4-scout-17b-16e-instruct",
+        messages=[{"role": "user", "content": prompt}]
+    )
+    return response.choices[0].message.content
 
 def get_response(prompt):
     current_time = time.time()
