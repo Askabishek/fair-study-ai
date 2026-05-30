@@ -5,7 +5,7 @@ import time
 
 # Gemini API setup
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-2.0-flash")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Rate limiting + Caching
 if 'last_request' not in st.session_state:
