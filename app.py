@@ -3,7 +3,7 @@ import os
 import time
 
 from groq import groq
-client = Groq(api_key=os.environ.get("GROQ_API_KEY")
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # Rate limiting + Caching
 if 'last_request' not in st.session_state:
