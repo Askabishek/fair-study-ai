@@ -1,13 +1,34 @@
 import streamlit as st
-from groq import Groq
+import google.generativeai as genai
 import os
+import time
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+# Gemini API setup
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-2.0-flash")
 
+# Rate limiting + Caching
+if 'last_request' not in st.session_state:
+    st.session_state.last_request = 0
+
+@st.cache_data
+def get_cached_response(prompt):
+    response = model.generate_content(prompt)
+    return response.text
+
+def get_response(prompt):
+    current_time = time.time()
+    if current_time - st.session_state.last_request < 3:
+        return "⏳ Please wait a moment before next request!"
+    st.session_state.last_request = current_time
+    return get_cached_response(prompt)
+
+# Page config
 st.set_page_config(page_title="Fair Study AI", layout="wide")
 st.title("Fair Study AI")
 st.caption("Your unbiased AI-powered learning assistant")
 
+# Sidebar
 feature = st.sidebar.selectbox("Choose a Feature", [
     "Concept Explainer",
     "Smart Note Generator",
@@ -22,13 +43,7 @@ language = st.sidebar.selectbox("Response Language", [
     "Hindi",
 ])
 
-def get_response(prompt):
-    response = client.chat.completions.create(
-        model="meta-llama/llama-4-scout-17b-16e-instruct",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content
-
+# Features
 if feature == "Concept Explainer":
     st.header("Concept Explainer")
     topic = st.text_input("Enter a topic:")
@@ -73,5 +88,5 @@ elif feature == "Text Summarizer":
     if st.button("Summarize!"):
         if text:
             with st.spinner("Summarizing..."):
-                prompt = f"Summarize this text clearly and concisely for a college student: {text}. Respond in {language}."
+                prompt = f"Summarize this text for a college student: {text}. Respond in {language}."
                 st.write(get_response(prompt))
