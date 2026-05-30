@@ -12,7 +12,7 @@ if 'last_request' not in st.session_state:
 @st.cache_data
 def get_cached_response(prompt):
     response = client.chat.completions.create(
-        model="meta-llama-4-scout-17b-16e-instruct",
+        model="meta-llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": prompt}]
     )
     return response.choices[0].message.content
