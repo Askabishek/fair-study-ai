@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import time
 
-from groq import groq
+from groq 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # Rate limiting + Caching
