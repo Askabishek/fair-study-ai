@@ -1,0 +1,10 @@
+streamlit
+langgraph
+google-api-python-client
+google-auth-oauthlib
+google-auth
+google-auth-httplib2
+pydantic
+groq
+pypdf
+gtts
